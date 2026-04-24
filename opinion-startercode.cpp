@@ -170,13 +170,13 @@ int main() {
     // AI-GENERATED END: Runtime timers
 
     
-    // // Read input files
-    // read_opinions("opinions.txt"); 
-    // read_edges("edges.txt");
-
-    // Test for larger input
-    read_opinions("opinions_large.txt");
-    read_edges("edge_list_large.txt");
+    #ifdef USE_LARGE_DATA
+        read_opinions("opinions_large.txt");
+        read_edges("edge_list_large.txt");
+    #else
+        read_opinions("opinions.txt");
+        read_edges("edge_list.txt");
+    #endif
 
     // convert edge list into adjacency matrix once we know total_nodes
     build_adj();

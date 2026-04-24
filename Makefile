@@ -2,6 +2,7 @@
 CXX := g++
 SRC := opinion-startercode.cpp
 MODE ?= list
+DATA ?= short
 CXXFLAGS := -std=c++17 -O2 -Wall -Wextra -pedantic
 
 ifeq ($(MODE),matrix)
@@ -11,6 +12,14 @@ else ifeq ($(MODE),list)
 TARGET := opinion_list.exe
 else
 $(error Unsupported MODE='$(MODE)'. Use MODE=matrix or MODE=list)
+endif
+
+ifeq ($(DATA),large)
+CXXFLAGS += -DUSE_LARGE_DATA
+else ifeq ($(DATA),short)
+# default short dataset, no extra macro needed
+else
+$(error Unsupported DATA='$(DATA)'. Use DATA=short or DATA=large)
 endif
 
 .PHONY: all build run compare clean help
@@ -25,8 +34,8 @@ run: build
 
 compare:
 	$(MAKE) clean
-	$(MAKE) run MODE=matrix > matrix_run_output.txt
-	$(MAKE) run MODE=list > list_run_output.txt
+	$(MAKE) run MODE=matrix DATA=large > matrix_run_output.txt
+	$(MAKE) run MODE=list DATA=large > list_run_output.txt
 	@echo "Saved outputs to matrix_run_output.txt and list_run_output.txt"
 
 clean:
@@ -36,7 +45,8 @@ help:
 	@echo "Usage:"
 	@echo "  make build MODE=matrix   # build matrix version"
 	@echo "  make build MODE=list     # build list version"
-	@echo "  make run MODE=matrix     # build and run matrix version"
-	@echo "  make run MODE=list       # build and run list version"
-	@echo "  make compare             # run both and save outputs"
+	@echo "  make run MODE=matrix DATA=short   # default short dataset"
+	@echo "  make run MODE=list DATA=short     # default short dataset"
+	@echo "  make run MODE=list DATA=large     # explicitly run large dataset"
+	@echo "  make compare                       # runs both modes on large dataset"
 	@echo "  make clean               # remove generated binaries and outputs"
